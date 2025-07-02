@@ -25,7 +25,7 @@ export default async function Page() {
     numberOfInvoices,
     numberOfCustomers,
   } = data[2];
-
+  console.log("dashboard page run");
   return (
     <main>
       <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
