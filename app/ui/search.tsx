@@ -10,12 +10,14 @@ export default function Search({ placeholder }: { placeholder: string }) {
 
   function handleSearch(term: string) {
     const params = new URLSearchParams(searchParams);
+    params.set("page", "1");
     if (term) params.set("query", term);
     else params.delete("query");
     router.replace(`${pathname}?${params.toString()}`);
   }
 
   //console.log("search", searchParams.get("query")?.toString());
+  console.log("search run");
   return (
     <div className="relative flex flex-1 flex-shrink-0">
       <label htmlFor="search" className="sr-only">
