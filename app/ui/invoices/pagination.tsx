@@ -19,7 +19,6 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
     return `${pathname}?${params.toString()}`;
   };
   //console.log("search from pagination", searchParams.entries().toArray());
-  console.log("pagination run", allPages);
 
   return (
     <>
