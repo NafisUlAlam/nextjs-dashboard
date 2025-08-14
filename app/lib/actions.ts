@@ -13,8 +13,6 @@ const FormSchema = z.object({
   customerId: z.string(),
   amount: z.coerce.number(),
   date: z.string(),
-  // In TypeScript, this is called a string union type.
-  // It means that the "status" property can only be one of the two strings: 'pending' or 'paid'.
   status: z.enum(["pending", "paid"]),
 });
 
@@ -35,16 +33,17 @@ export async function createInvoice(formdata: FormData) {
   redirect("/dashboard/invoices");
 }
 
-const UpdateInvoice = FormSchema.omit({ id: true, date: true });
+const UpdateInvoice = FormSchema.omit({ date: true });
 
-export async function updateInvoice(id: string, formdata: FormData) {
-  const { customerId, amount, status } = UpdateInvoice.parse({
+export async function updateInvoice(formdata: FormData) {
+  const { customerId, amount, status, id } = UpdateInvoice.parse({
     customerId: formdata.get("customerId"),
     amount: formdata.get("amount"),
     status: formdata.get("status"),
+    id: formdata.get("id"),
   });
   const amountInCents = amount * 100;
-  await sql`update invoices 
+  await sql`update invoices
   set customer_id = ${customerId}, amount = ${amountInCents}, status =${status}
   where id=${id}`;
   revalidatePath("/dashboard/invoices");
