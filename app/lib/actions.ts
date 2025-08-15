@@ -1,5 +1,6 @@
 "use server";
 
+import { error } from "console";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -26,33 +27,21 @@ export async function createInvoice(formdata: FormData) {
   });
   const amountInCents = amount * 100;
   const date = new Date().toISOString().split("T")[0];
-  console.log(date);
-  await sql`insert into invoices (customer_id, amount, status, date) 
-  values (${customerId}, ${amountInCents}, ${status}, ${date})`;
+  //console.log(date);
+  try {
+    await sql`insert into invoices (customer_id, amount, status, date) 
+    values (${customerId}, ${amountInCents}, ${status}, ${date})`;
+  } catch (error) {
+    console.log(error);
+  }
   revalidatePath("/dashboard/invoices");
   redirect("/dashboard/invoices");
 }
 
-const UpdateInvoice = FormSchema.omit({ date: true });
-const UpdateInvoice2 = FormSchema.omit({ id: true, date: true });
+const UpdateInvoice = FormSchema.omit({ id: true, date: true });
 
-export async function updateInvoice(formdata: FormData) {
-  const { customerId, amount, status, id } = UpdateInvoice.parse({
-    customerId: formdata.get("customerId"),
-    amount: formdata.get("amount"),
-    status: formdata.get("status"),
-    id: formdata.get("id"),
-  });
-  const amountInCents = amount * 100;
-  await sql`update invoices
-  set customer_id = ${customerId}, amount = ${amountInCents}, status =${status}
-  where id=${id}`;
-  revalidatePath("/dashboard/invoices");
-  redirect("/dashboard/invoices");
-}
-
-export async function updateInvoice2(id: string, formdata: FormData) {
-  const { customerId, amount, status } = UpdateInvoice2.parse({
+export async function updateInvoice(id: string, formdata: FormData) {
+  const { customerId, amount, status } = UpdateInvoice.parse({
     customerId: formdata.get("customerId"),
     amount: formdata.get("amount"),
     status: formdata.get("status"),
@@ -68,9 +57,4 @@ export async function updateInvoice2(id: string, formdata: FormData) {
 export async function deleteInvoice(id: string) {
   await sql`delete from invoices where id=${id}`;
   revalidatePath("/dashboard/invoices");
-}
-
-export async function delete2(formdata: FormData) {
-  const id = formdata.get("id")?.toString()!;
-  console.log(id);
 }
