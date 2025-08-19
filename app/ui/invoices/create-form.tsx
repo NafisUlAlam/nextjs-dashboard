@@ -91,7 +91,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
             Set the invoice status
           </legend>
           <div className="rounded-md border border-gray-200 bg-white px-[14px] py-3">
-            <div className="flex gap-4" aria-describedby="status-error">
+            <div className="flex gap-4">
               <div className="flex items-center">
                 <input
                   id="pending"
@@ -99,6 +99,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                   type="radio"
                   value="pending"
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
+                  aria-describedby="status-error"
                 />
                 <label
                   htmlFor="pending"
@@ -114,6 +115,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                   type="radio"
                   value="paid"
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
+                  aria-describedby="status-error"
                 />
                 <label
                   htmlFor="paid"
@@ -124,7 +126,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
               </div>
             </div>
           </div>
-          <div aria-atomic="true" aria-live="polite">
+          <div aria-atomic="true" aria-live="polite" id="status-error">
             {state.errors?.status &&
               state.errors.status.map((error) => {
                 return (
