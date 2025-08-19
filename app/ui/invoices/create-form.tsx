@@ -124,7 +124,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
               </div>
             </div>
           </div>
-          <div id="status-error" aria-atomic="true" aria-live="polite">
+          <div aria-atomic="true" aria-live="polite">
             {state.errors?.status &&
               state.errors.status.map((error) => {
                 return (
