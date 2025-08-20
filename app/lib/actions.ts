@@ -60,16 +60,39 @@ export async function createInvoice(prevState: State, formdata: FormData) {
 
 const UpdateInvoice = FormSchema.omit({ id: true, date: true });
 
-export async function updateInvoice(id: string, formdata: FormData) {
-  const { customerId, amount, status } = UpdateInvoice.parse({
+export type updateErrorState = {
+  errors: {
+    customerId?: string[] | undefined;
+    amount?: string[] | undefined;
+    status?: string[] | undefined;
+  };
+};
+
+export async function updateInvoice(
+  id: string,
+  prevState: updateErrorState,
+  formdata: FormData
+) {
+  const value = UpdateInvoice.safeParse({
     customerId: formdata.get("customerId"),
     amount: formdata.get("amount"),
     status: formdata.get("status"),
   });
+
+  if (!value.success) {
+    return {
+      errors: value.error.flatten().fieldErrors,
+    };
+  }
+  const { amount, customerId, status } = value.data;
   const amountInCents = amount * 100;
-  await sql`update invoices
-  set customer_id = ${customerId}, amount = ${amountInCents}, status =${status}
-  where id=${id}`;
+  try {
+    await sql`update invoices
+    set customer_id = ${customerId}, amount = ${amountInCents}, status =${status}
+    where id=${id}`;
+  } catch (error) {
+    console.log(error);
+  }
   revalidatePath("/dashboard/invoices");
   redirect("/dashboard/invoices");
 }
