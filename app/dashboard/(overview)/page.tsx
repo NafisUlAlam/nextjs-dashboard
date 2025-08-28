@@ -30,7 +30,7 @@ export default async function Page() {
   //   numberOfInvoices,
   //   numberOfCustomers,
   // } = data[2];
-  console.log("dashboard page run inside route group overview folder");
+  //console.log("dashboard page run inside route group overview folder");
   return (
     <main>
       <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
