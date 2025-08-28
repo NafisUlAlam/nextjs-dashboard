@@ -1,5 +1,7 @@
 "use server";
 
+import { signIn } from "@/auth";
+import { AuthError } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -100,4 +102,24 @@ export async function updateInvoice(
 export async function deleteInvoice(id: string) {
   await sql`delete from invoices where id=${id}`;
   revalidatePath("/dashboard/invoices");
+}
+
+export async function authenticate(
+  prevState: string | undefined,
+  formData: FormData
+) {
+  try {
+    signIn("credentials", formData);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "CredentialsSignin":
+          return "invalid credentials";
+
+        default:
+          return "something went wrong";
+      }
+    }
+    throw error;
+  }
 }
