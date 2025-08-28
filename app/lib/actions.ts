@@ -109,7 +109,6 @@ export async function authenticate(
   formData: FormData
 ) {
   try {
-    console.log(formData.get("email"));
     await signIn("credentials", formData);
   } catch (error) {
     if (error instanceof AuthError) {
